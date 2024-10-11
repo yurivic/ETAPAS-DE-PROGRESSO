@@ -1,53 +1,30 @@
-const etapas = document.querySelectorAll('.etapas')
-const prev = document.querySelectorAll('.btn_prev')
-const next = document.querySelectorAll('.btn_next')
-const etapa = document.querySelectorAll('.etapa')
+const etapas = document.querySelectorAll('.etapa');
+const prev = document.querySelector('.btn_prev');
+const next = document.querySelector('.btn_next');
+let currentIndex = 0;
 
-let etapaAtiva = 1
-
-next.addEventListener('click', () => {
-    etapaAtiva++
-
-    if(etapaAtiva > etapa.length) {
-        etapaAtiva = etapa.length
-    }
-
-    update()
-})
-
-prev.addEventListener('click', () => {
-    etapaAtiva--
-
-    if (etapaAtiva < 1) {
-        etapaAtiva = 1
-    }
-
-    update()
-
-})
-
-function update() {
-    etapa.forEach((etapa, idx) => {
-        if (idx, etapaAtiva) {
-            etapa.classList.add('active')
-        } else {
-            etapa.classList.remove('remove')
-        }
-    })
-
-    const actives = document.querySelectorAll('.active')
-
-    etapas.style.widht = (actives.length - 1) / (etapa.length - 1) * 100 + '%'
-
-    if (etapaAtiva === 1) {
-        prev.disabled = true
-    } else if (etapaAtiva === etapa.length) {
-        next.disabled = true
-    } else {
-        prev.disabled = false 
-        next.disabled = false
-    }
-    console.log(etapaAtiva)
+function updateStep() {
+    // Atualiza os estados dos botões
+    prev.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
+    prev.disabled = currentIndex === 0;
+    next.style.cursor = currentIndex === etapas.length - 1 ? 'not-allowed' : 'pointer';
+    next.disabled = currentIndex === etapas.length - 1;
 }
 
+prev.addEventListener('click', () => {
+    etapas[currentIndex].classList.remove('active');
 
+    currentIndex = (currentIndex - 1) % etapas.length;
+
+    updateStep()
+});
+
+next.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % etapas.length;
+    
+    etapas[currentIndex].classList.add('active');
+
+    updateStep()
+});
+
+updateStep();
